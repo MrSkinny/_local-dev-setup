@@ -1,11 +1,3 @@
----
-time: 60
-type: written content
-name: Local development setup for Windows
-author: Benjamin White
-
----
-
 In this reading we'll guide you through setting up your local development environment for Windows. First, we'll install Git Bash (which is part of [Git for Windows](https://git-for-windows.github.io/)), which gives us a Linux-like command-line environment in Windows.
 
 After configuring Git, we'll install and configure Visual Studio Code so we can open folders and files directly from the command line. Finally, we'll install Node and NPM.

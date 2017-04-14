@@ -1,11 +1,3 @@
----
-time: 60
-type: written content
-name: Local development setup for Mac
-author: Benjamin White
-
----
-
 In this reading we'll guide you through setting up your local development environment for Mac. First, we'll walk you through setting up Visual Studio Code, which is the text editor we recommend using for this course.
 
 After that we'll install [Homebrew](http://brew.sh/) which is a package manager that we'll use to install Node and Git (and, later in this course, databases). We'll install and configure Git, and then Node and NPM.
