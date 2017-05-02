@@ -6,108 +6,66 @@ JavaScript is a dynamic and loosely-typed language and as such, it is especially
 There are several linters available. JSLint, created by Douglas Crockford is the grandfather of Javascript linters. It is very opinionated and was very popular but it was not customizable. JHint was developed as an alternative to support customization but neither has not kept up with changes to Javascript. ESLint, developed by Nicholas C. Zakas is currently the most popular, customizable linter that supports modern Javascript syntax.
 
 #### Install and Configure ESLint
-ESLint can be installed "globally" and configured at the root so it will run across all your projects. It can also be installed and configured "locally", that is for each project which allows for project specific configuration. For now, we will install ESLint globally so it will be available for all your projects. 
+ESLint can be installed and configured "globally" or "locally"
+- When global, it is installed using the `--global` flag or `-g` for short like: `npm install -g eslint`. And configuration file is placed in your root directory so it will run across all projects. 
+- When local, it is installed using with `--save-dev` option like `npm install eslint --save-dev` so an entry is placed in the devDependencies property in package.json. And a configuration file is placed in the root of the project which overrides the global configuration and allows for project specific configuration.
+
+For now, we will install ESLint globally so it will be available for all your projects. 
 
 First, from the command line (Git-Bash if you're on windows), `cd ~/` to ensure you are in your user root directory and then install ESLint globally by running `npm install -g eslint`.
 
-Next, run `eslint --init`. You will be prompted to enter your preferences. Use the arrow keys and space bar to select the following preferences.
+Next, create a file named `.eslintrc.json` in your User directory or the parent folder where you store your projects. For instance, if you are on a Mac you may keep you projects in a `~/Desktop/Projects` folder. You can save the `.eslintrc.json` file in any of these locations:
+- `/Users/<YOUR-USERNAME>/`
+- `/Users/<YOUR-USERNAME>/Desktop`
+- `/Users/<YOUR-USERNAME>/Desktop/Projects`
 
-```text
-eslint --init
-
-? **How would you like to configure ESLint?**
-=> Answer questions about your style
-Use a popular style guide
-Inspect your JavaScript file(s)
-
-? Are you using ECMAScript 6 features? (y/N) Yes
-
-? Are you using ES6 modules? (y/N) Yes
-
-? **Do you use CommonJS?** (y/N) No
-
-? **Where will your code run?**
-◉ Browser
-◉ Node
-
-? **Do you use JSX?** (y/N) No
-
-? **What style of indentation do you use?** (Use arrow keys)
-Tabs
-=> Spaces
-
-? **What quotes do you use for strings?**
-Double
-=> Single
-
-? **What line endings do you use?** (Use arrow keys)
-[On Mac and Linux, choose Unix. On Windows, choose Windows]
-
-? **Do you require semicolons?** (Y/n) Yes
-
-? **What format do you want your config file to be in?** (Use arrow keys)
-JavaScript
-YAML
-=> JSON
 ```
-
-If you get the following error, you chose to "Y" for JSX and React. Please re-run `eslint --init` and choose "N" for JSX. 
-```
-Could not find a package.json file. Run 'npm init' to create one.
-Error: Could not find a package.json file. Run 'npm init' to create one.
-    at check (/usr/local/lib/node_modules/eslint/lib/util/npm-util.js:76:15)
-    at Object.checkDevDeps (/usr/local/lib/node_modules/eslint/lib/util/npm-util.js:124:12)
-...
-```
-
-> Note, we will configure ESLint to use JSX and React on a per-project basis during the React phase of the course.
-
-Open the config file in your editor. If you setup VS Code per instructions simple enter `code ~/.eslintrc.js` in the Terminal. Make the following changes to the `rules` property.
-
-- Add: `"eqeqeq":"error",`
-- Add: `"no-console": "warn",`
-- Add: `"no-eval": "error",`
-- And change the indent rule from 4 to 2.
-
-Your config file should look like the one below.
-
-```JSON
 {
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "script"
     },
     "rules": {
-        // Add these rules
+        "strict": ["error", "safe"], 
         "eqeqeq":"error",
-        "no-console": "warn",
+        "no-console": "off",
         "no-eval": "error",
-
-        // Change indent from 4 to 2 spaces
-        "indent": [
-            "error",
-            2
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
+        "indent": ["error", 2],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"]
     }
 }
 ```
+
+Let's discuss what the options mean:
+The `env` property tell eslint which types of environments you will be running. This sets up global variables such as `$` for jquery in the browser and `require` for node. The following are the primary environments we will be running in.
+
+```json
+"env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "mocha": true
+},
+```
+The `extends` property allows eslint to extend a pre-configured set of options. Here we've choosen to use eslint's defaults
+
+The `parserOptions` tells eslint how to parse the files. For now, we will use `script` which is good for node. This optional also allows us to be notified if we are missing the `'use strict';` pragma. Later on, you will create project specific configurations for React and set this to `module` which supports ES6 modules (`import` and `exports`);
+
+Last is the `rules` property. Here we set some common defaults:
+- `"strict": ["error", "safe"]` warns if we are missing `'use strict';` pragma
+- `"eqeqeq":"error"` warns if we use `==` (double equals) instead of `===`
+- `"no-console": "off"` turns off warnings about `console.log` which is appropriate for our course. But you will want this set to `"error"` when developing for production.
+- `"no-eval": "error"` warns about using `.eval()`. 
+- `"indent": ["error", 2]` Prefer 2 space indents and warns about indents of anything but 2 spaces. This also allows the `--fix` command to work properly. More on that later.
+- `"quotes": ["error", "single"]` Prefer single quotes and warns about using double quotes. This also allows the `--fix` command to work properly. More on that later.
+- `"semi": ["error", "always"]` Prefer semi-colons and warns if they are missing. This also allows the `--fix` command to work properly. More on that later.
 
 
 #### ESLint in the Terminal
