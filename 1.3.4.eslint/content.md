@@ -12,61 +12,71 @@ ESLint can be installed and configured "globally" or "locally"
 
 For now, we will install ESLint globally so it will be available for all your projects. 
 
-First, from the command line (Git-Bash if you're on windows), `cd ~/` to ensure you are in your user root directory and then install ESLint globally by running `npm install -g eslint`.
+First, from the Terminal (on a Mac) or Git-Bash (on windows) run the following command.
 
-Next, create a file named `.eslintrc.json` in your User directory or the parent folder where you store your projects. For instance, if you are on a Mac you may keep you projects in a `~/Desktop/Projects` folder. You can save the `.eslintrc.json` file in any of these locations:
-- `/Users/<YOUR-USERNAME>/`
-- `/Users/<YOUR-USERNAME>/Desktop`
-- `/Users/<YOUR-USERNAME>/Desktop/Projects`
-
+```bash
+npm install -g eslint
 ```
+
+That will install eslint in globally on your system and make it available on the command line.
+
+Next, you'll create a eslint config file in your root directory. On the command line type `cd ~/` to navigate to your user root directory. Recall that the `~` symbol is shorthand for your user directory like `/Users/<YOUR-USERNAME>/`. Then create the file by typing `touch .eslintrc.json` on the command line and open the file in your favorite editor.
+
+Copy and paste the following config into the `.eslintrc.json` file.
+
+```json
 {
+    /** 
+    * ESLint: http://eslint.org/docs/user-guide/configuring
+    */
+    
+    // "env:" supplies predefined global variables
     "env": {
         "browser": true,
         "es6": true,
         "node": true,
-        "mocha": true
+        "mocha": true,
+        "mongo": true
     },
+    // our configuration extends the recommended base configuration
     "extends": "eslint:recommended",
+    // define the type of file `script` or `module` for ES6 Modules
     "parserOptions": {
         "sourceType": "script"
     },
+    //ESLint rules: Severity Levels: off = 0 | warn = 1 | error = 2
     "rules": {
-        "strict": ["error", "safe"], 
-        "eqeqeq":"error",
-        "no-console": "off",
-        "no-eval": "error",
-        "indent": ["error", 2],
-        "quotes": ["error", "single"],
-        "semi": ["error", "always"]
+        "strict": ["error", "safe"],   //prefer `'use-strict';` pragma
+        "eqeqeq":"error",              //prefer strict equality `===`
+        "no-console": "warn",          //allows but warn about console like `console.log()`
+        "no-unused-vars": "warn",      //warns about unused variables
+        "no-eval": "error",            //disallows `eval()` usage
+        "indent": ["error", 2],        //enforce 2 space indents (not tabs)        
+        "quotes": ["error", "single"], //prefer single quotes over double quotes
+        "semi": ["error", "always"]    //enforce semi-colon usage
     }
 }
 ```
 
 Let's discuss what the options mean:
-The `env` property tell eslint which types of environments you will be running. This sets up global variables such as `$` for jquery in the browser and `require` for node. The following are the primary environments we will be running in.
+- First, the ESLint JSON parser allows comments which are typically not allowed in JSON. This is why we can have non-standard comments in our config file.
 
-```json
-"env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "mocha": true
-},
-```
-The `extends` property allows eslint to extend a pre-configured set of options. Here we've choosen to use eslint's defaults
-
-The `parserOptions` tells eslint how to parse the files. For now, we will use `script` which is good for node. This optional also allows us to be notified if we are missing the `'use strict';` pragma. Later on, you will create project specific configurations for React and set this to `module` which supports ES6 modules (`import` and `exports`);
-
-Last is the `rules` property. Here we set some common defaults:
-- `"strict": ["error", "safe"]` warns if we are missing `'use strict';` pragma
-- `"eqeqeq":"error"` warns if we use `==` (double equals) instead of `===`
-- `"no-console": "off"` turns off warnings about `console.log` which is appropriate for our course. But you will want this set to `"error"` when developing for production.
-- `"no-eval": "error"` warns about using `.eval()`. 
-- `"indent": ["error", 2]` Prefer 2 space indents and warns about indents of anything but 2 spaces. This also allows the `--fix` command to work properly. More on that later.
-- `"quotes": ["error", "single"]` Prefer single quotes and warns about using double quotes. This also allows the `--fix` command to work properly. More on that later.
-- `"semi": ["error", "always"]` Prefer semi-colons and warns if they are missing. This also allows the `--fix` command to work properly. More on that later.
-
+- The `env` property tell eslint which types of environments you will be running. This sets up global variables such as `$` for jquery in the browser and `require` for node. You can find more information is the [Specifying Environments](http://eslint.org/docs/user-guide/configuring#specifying-environments) section of the documentation. 
+- The `parserOptions` tells eslint how to parse the files. For Node development, we will use `script` which is the default. Also, setting `"sourceType": "script"` is required for the `'use strict';` pragma notification. Later in the course, you will create project specific configurations for React and set this to `module` which supports ES6 modules (`import` and `exports`);
+- The `extends` property allows us to extend sets of pre-configure rules. Here we extend ESLint's base configuration. 
+- ESLint supports 3 severity levels. Each can be defined as a string or a number value.
+    - "off" or 0 - turn the rule off
+    - "warn" or 1 - turn the rule on as a warning
+    - "error" or 2 - turn the rule on as an error
+- And is the `rules` property. Here we set some common defaults:
+    - `"strict": ["error", "safe"]` prefer `'use-strict';` pragma
+    - `"eqeqeq":"error"` prefer strict equality `===` (triple equals) over `==` (double equals)
+    - `"no-console": "off"` allows but warns about console like `console.log()` which is appropriate for our course. But you will want this set to `"error"` when developing for production.
+    - `"no-unused-vars"` warns about unused variables which is appropriate for our course because we will frequently define variables such as `(req, res)` but may only use `res`.
+    - `"no-eval": "error"` disallows `eval()` usage
+    - `"indent": ["error", 2]` Prefer 2 space indents and warns about indents of anything but 2 spaces. This also allows the `--fix` command to work properly. More on that later.
+    - `"quotes": ["error", "single"]` Prefer single quotes and warns about using double quotes. This also allows the `--fix` command to work properly. More on that later.
+    - `"semi": ["error", "always"]` Prefer semi-colons and warns if they are missing. This also allows the `--fix` command to work properly. More on that later.
 
 #### ESLint in the Terminal
 You can now lint files from the command line. Let give it a try.
