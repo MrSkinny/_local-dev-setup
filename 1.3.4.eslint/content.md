@@ -24,7 +24,7 @@ Next, you'll create a eslint config file in your root directory. On the command 
 
 Copy and paste the following config into the `.eslintrc.json` file.
 
-```json
+```
 {
     /** 
     * ESLint: http://eslint.org/docs/user-guide/configuring
