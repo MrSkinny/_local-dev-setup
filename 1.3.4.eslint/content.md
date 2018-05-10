@@ -48,7 +48,6 @@ Copy and paste the following config into the `.eslintrc.json` file.
     "rules": {
         "strict": ["error", "safe"],   //prefer `'use-strict';` pragma
         "eqeqeq":"error",              //prefer strict equality `===`
-        "no-console": "warn",          //allows but warn about console like `console.log()`
         "no-unused-vars": "warn",      //warns about unused variables
         "no-eval": "error",            //disallows `eval()` usage
         "indent": ["error", 2],        //enforce 2 space indents (not tabs)        
